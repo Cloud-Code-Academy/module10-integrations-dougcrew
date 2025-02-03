@@ -12,17 +12,15 @@
  * 
  * 1. Avoid Direct Callouts: Triggers do not support direct HTTP callouts. Instead, use asynchronous methods like @future or Queueable to make the callout.
  * 2. Bulkify Logic: Ensure that the trigger logic is bulkified so that it can handle multiple records efficiently without hitting governor limits.
- * 3. Avoid Recursive Triggers: Ensure that the callout logic doesn't result in changes that re-invoke the same trigger, causing a recursive loop.
+ * 3. Avoid Recursive Triggers: Ensure that the callaout logic doesn't result in changes that re-invoke the same trigger, causing a recursive loop.
  * 
  * Optional Challenge: Use a trigger handler class to implement the trigger logic.
  */
-trigger ContactTrigger on Contact(before insert) {
-	// When a contact is inserted
-	// if DummyJSON_Id__c is null, generate a random number between 0 and 100 and set this as the contact's DummyJSON_Id__c value
-
-	//When a contact is inserted
-	// if DummyJSON_Id__c is less than or equal to 100, call the getDummyJSONUserFromId API
-
-	//When a contact is updated
-	// if DummyJSON_Id__c is greater than 100, call the postCreateDummyJSONUser API
+trigger ContactTrigger on Contact(before insert, before update) {
+	if (Trigger.isInsert) {
+			ContactJsonTriggerHandler.handleContact(Trigger.new);	
+	} 
+	else if(Trigger.isUpdate && Trigger.isBefore){
+			ContactJsonTriggerHandler.handleContactUpdate(Trigger.new); 
+    }
 }

@@ -104,6 +104,9 @@ public with sharing class DummyJSONCalloutTest {
 		// Parse the generated JSON
 		Map<String, Object> payloadMap = (Map<String, Object>) JSON.deserializeUntyped(payload);
 
+		System.debug('testContact.Id type: ' + testContact.Id.getType());
+		System.debug('payloadMap.get(\'salesforceId\') type: ' + payloadMap.get('salesforceId'));
+		System.debug('Full payload map: ' + payloadMap);
 		// Assertions to check if the payload contains the right data
 		System.assertEquals(testContact.Id, payloadMap.get('salesforceId'), 'Id does not match.');
 		System.assertEquals('John', payloadMap.get('firstName'), 'FirstName does not match.');
